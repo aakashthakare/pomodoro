@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,15 +34,60 @@ class MyAppState extends ChangeNotifier {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    return MaterialApp(
+      title: "Pomodoro",
+      home: PomodoroTimer(),
+    );
+  }
+}
 
-    return Scaffold(
-      body: Column(
-        children: [
-          Text('A Pomodoro App idea:'),
-          Text(appState.current.asLowerCase),
-        ],
+class PomodoroTimer extends StatefulWidget {
+  PomodoroTimer();
+
+  @override
+  State<StatefulWidget> createState() => PomodoroTimerState();
+}
+
+class PomodoroTimerState extends State<PomodoroTimer> {
+  static var totalSeconds = 1800;
+  static Duration duration = Duration(seconds: 0);
+
+  Timer? timer;
+
+  @override
+  void initState() {
+    updateDuration();
+    start();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildTimer();
+  }
+
+  buildTimer() {
+    return Center(
+      child: Text(
+        duration.inMinutes.toString(),
+        style: TextStyle(fontSize: 120),
+        textAlign: TextAlign.center,
       ),
     );
+  }
+
+  start() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) => tick());
+  }
+
+  updateDuration() {
+    duration = Duration(seconds: totalSeconds);
+  }
+
+  tick() {
+    setState(() {
+      totalSeconds--;
+      updateDuration();
+    });
   }
 }
