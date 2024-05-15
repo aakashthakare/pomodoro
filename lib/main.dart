@@ -17,10 +17,6 @@ class MyApp extends StatelessWidget {
       create: (context) => MyAppState(),
       child: MaterialApp(
         title: 'Pomodoro',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-        ),
         home: MyHomePage(),
       ),
     );
@@ -64,14 +60,17 @@ class PomodoroTimerState extends State<PomodoroTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return buildTimer();
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: buildTimer(),
+    );
   }
 
   buildTimer() {
     return Center(
       child: Text(
         duration.inMinutes.toString(),
-        style: TextStyle(fontSize: 120),
+        style: TextStyle(fontSize: 120, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),
     );
