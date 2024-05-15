@@ -49,7 +49,8 @@ class PomodoroTimer extends StatefulWidget {
 }
 
 class PomodoroTimerState extends State<PomodoroTimer> {
-  static var totalSeconds = 1800;
+  static var pomodoroMinutes = 30;
+  static var totalSeconds = pomodoroMinutes * 60;
   static Duration duration = Duration(seconds: 0);
 
   Timer? timer;
@@ -87,6 +88,9 @@ class PomodoroTimerState extends State<PomodoroTimer> {
   tick() {
     setState(() {
       totalSeconds--;
+      if (totalSeconds == 0) {
+        totalSeconds = pomodoroMinutes * 60;
+      }
       updateDuration();
     });
   }
