@@ -45,12 +45,52 @@ class PomodoroTimer extends StatefulWidget {
   State<StatefulWidget> createState() => PomodoroTimerState();
 }
 
-class PomodoroTimerState extends State<PomodoroTimer> {
-  static var pomodoroMinutes = 1;
-  static var totalSeconds = pomodoroMinutes * 60;
-  static Duration duration = Duration(seconds: 0);
-  bool _isStarted = false;
+class PomodoroSession {
+  String title;
+  int seconds;
 
+  PomodoroSession(this.title, this.seconds);
+}
+
+class PomodoroSessionManager {
+  static const int start = 1;
+  static const int end = 8;
+
+  var session = 10;
+  var smallBreak = 3;
+  var longBreak = 20;
+
+  var state = 1;
+
+  next() {
+    int timerMinutes;
+    String title;
+
+    if (state == end) {
+      state = start;
+      timerMinutes = longBreak;
+      title = "Long Break";
+    } else {
+      if (state % 2 != 0) {
+        timerMinutes = session;
+        title = "Work In Progress";
+      } else {
+        timerMinutes = smallBreak;
+        title = "Small Break";
+      }
+      state++;
+    }
+
+    return PomodoroSession(title, timerMinutes); //TODO MUltiply with * 60
+  }
+}
+
+class PomodoroTimerState extends State<PomodoroTimer> {
+  static PomodoroSessionManager sessionManager = PomodoroSessionManager();
+  static PomodoroSession session = sessionManager.next();
+  static Duration duration = Duration(seconds: 0);
+
+  bool _isStarted = false;
   Timer? timer;
 
   @override
@@ -74,6 +114,11 @@ class PomodoroTimerState extends State<PomodoroTimer> {
 
     return Center(
         child: Column(children: [
+      Text(
+        session.title,
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
       Text(
         "$hours:$minutes:$seconds",
         style: TextStyle(fontSize: 120, fontWeight: FontWeight.bold),
@@ -133,24 +178,26 @@ class PomodoroTimerState extends State<PomodoroTimer> {
 
   reset() {
     setState(() {
-      totalSeconds = pomodoroMinutes * 60;
       pause();
+      _isStarted = false;
+      updateDuration();
+      session = sessionManager.next();
     });
   }
 
   updateDuration() {
-    duration = Duration(seconds: totalSeconds);
+    duration = Duration(seconds: session.seconds);
   }
 
   tick() {
     setState(() {
-      totalSeconds--;
-      if (totalSeconds == 0) {
+      session.seconds -= 1;
+      if (session.seconds == 0) {
         reset();
         ringTheBell();
-      } else {
-        updateDuration();
+        start();
       }
+      updateDuration();
     });
   }
 
