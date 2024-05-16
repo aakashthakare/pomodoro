@@ -139,7 +139,7 @@ class PomodoroTimerState extends State<PomodoroTimer> {
               Text(
                 timer,
                 style: TextStyle(
-                    fontSize: 124,
+                    fontSize: 128,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
