@@ -45,7 +45,7 @@ class PomodoroTimer extends StatefulWidget {
 }
 
 class PomodoroTimerState extends State<PomodoroTimer> {
-  static var pomodoroMinutes = 30;
+  static var pomodoroMinutes = 134;
   static var totalSeconds = pomodoroMinutes * 60;
   static Duration duration = Duration(seconds: 0);
 
@@ -67,9 +67,13 @@ class PomodoroTimerState extends State<PomodoroTimer> {
   }
 
   buildTimer() {
+    var hours = (duration.inMinutes ~/ 60).toString().padLeft(2, '0');
+    var minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    var seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+
     return Center(
       child: Text(
-        duration.inMinutes.toString(),
+        "$hours:$minutes:$seconds",
         style: TextStyle(fontSize: 120, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),
