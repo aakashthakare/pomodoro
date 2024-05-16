@@ -11,6 +11,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: bluefireteam/flutter-gh-pages@main
+      - uses: aakashthakare/flutter-gh-pages
         with:
           workingDir: ./
