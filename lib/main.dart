@@ -45,7 +45,7 @@ class PomodoroTimer extends StatefulWidget {
 }
 
 class PomodoroTimerState extends State<PomodoroTimer> {
-  static var pomodoroMinutes = 134;
+  static var pomodoroMinutes = 120;
   static var totalSeconds = pomodoroMinutes * 60;
   static Duration duration = Duration(seconds: 0);
 
@@ -54,7 +54,6 @@ class PomodoroTimerState extends State<PomodoroTimer> {
   @override
   void initState() {
     updateDuration();
-    start();
     super.initState();
   }
 
@@ -72,16 +71,63 @@ class PomodoroTimerState extends State<PomodoroTimer> {
     var seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
 
     return Center(
-      child: Text(
+        child: Column(children: [
+      Text(
         "$hours:$minutes:$seconds",
         style: TextStyle(fontSize: 120, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),
-    );
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        ElevatedButton(
+            onPressed: start,
+            style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+                padding: EdgeInsets.all(20),
+                backgroundColor: Colors.white, // <-- Button color
+                foregroundColor: Colors.lightBlue),
+            child: const Icon(
+              Icons.play_circle,
+              size: 50,
+            )),
+        ElevatedButton(
+            onPressed: pause,
+            style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+                padding: EdgeInsets.all(20),
+                backgroundColor: Colors.white, // <-- Button color
+                foregroundColor: Colors.lightBlue),
+            child: const Icon(
+              Icons.pause,
+              size: 50,
+            )),
+        ElevatedButton(
+            onPressed: reset,
+            style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+                padding: EdgeInsets.all(20),
+                backgroundColor: Colors.white, // <-- Button color
+                foregroundColor: Colors.lightBlue),
+            child: const Icon(
+              Icons.restore,
+              size: 50,
+            ))
+      ])
+    ]));
   }
 
   start() {
     timer = Timer.periodic(Duration(seconds: 1), (_) => tick());
+  }
+
+  pause() {
+    timer?.cancel();
+  }
+
+  reset() {
+    setState(() {
+      totalSeconds = pomodoroMinutes * 60;
+      updateDuration();
+    });
   }
 
   updateDuration() {
@@ -92,7 +138,7 @@ class PomodoroTimerState extends State<PomodoroTimer> {
     setState(() {
       totalSeconds--;
       if (totalSeconds == 0) {
-        totalSeconds = pomodoroMinutes * 60;
+        reset();
       }
       updateDuration();
     });
