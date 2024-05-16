@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   runApp(MyApp());
@@ -45,9 +46,10 @@ class PomodoroTimer extends StatefulWidget {
 }
 
 class PomodoroTimerState extends State<PomodoroTimer> {
-  static var pomodoroMinutes = 120;
+  static var pomodoroMinutes = 1;
   static var totalSeconds = pomodoroMinutes * 60;
   static Duration duration = Duration(seconds: 0);
+  bool _isStarted = false;
 
   Timer? timer;
 
@@ -79,7 +81,7 @@ class PomodoroTimerState extends State<PomodoroTimer> {
       ),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         ElevatedButton(
-            onPressed: start,
+            onPressed: _isStarted ? null : start,
             style: ElevatedButton.styleFrom(
                 shape: CircleBorder(),
                 padding: EdgeInsets.all(20),
@@ -90,7 +92,7 @@ class PomodoroTimerState extends State<PomodoroTimer> {
               size: 50,
             )),
         ElevatedButton(
-            onPressed: pause,
+            onPressed: _isStarted ? pause : null,
             style: ElevatedButton.styleFrom(
                 shape: CircleBorder(),
                 padding: EdgeInsets.all(20),
@@ -116,17 +118,23 @@ class PomodoroTimerState extends State<PomodoroTimer> {
   }
 
   start() {
-    timer = Timer.periodic(Duration(seconds: 1), (_) => tick());
+    setState(() {
+      _isStarted = true;
+      timer = Timer.periodic(Duration(seconds: 1), (_) => tick());
+    });
   }
 
   pause() {
-    timer?.cancel();
+    setState(() {
+      _isStarted = false;
+      timer?.cancel();
+    });
   }
 
   reset() {
     setState(() {
       totalSeconds = pomodoroMinutes * 60;
-      updateDuration();
+      pause();
     });
   }
 
@@ -139,8 +147,15 @@ class PomodoroTimerState extends State<PomodoroTimer> {
       totalSeconds--;
       if (totalSeconds == 0) {
         reset();
+        ringTheBell();
+      } else {
+        updateDuration();
       }
-      updateDuration();
     });
+  }
+
+  ringTheBell() async {
+    AudioPlayer player = AudioPlayer();
+    await player.play(AssetSource('bell.wav'));
   }
 }
