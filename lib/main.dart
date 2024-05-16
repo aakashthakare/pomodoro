@@ -57,9 +57,9 @@ class PomodoroSessionManager {
   static const int start = 1;
   static const int end = 8;
 
-  var session = 10;
-  var smallBreak = 3;
-  var longBreak = 20;
+  var session = 25;
+  var smallBreak = 5;
+  var longBreak = 30;
 
   var state = 1;
 
@@ -152,7 +152,7 @@ class PomodoroTimerState extends State<PomodoroTimer> {
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 100),
+              SizedBox(height: 300),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 ElevatedButton(
                     onPressed: _isStarted ? null : start,
@@ -162,7 +162,7 @@ class PomodoroTimerState extends State<PomodoroTimer> {
                         backgroundColor: Colors.white, // <-- Button color
                         foregroundColor: Colors.lightBlue),
                     child: const Icon(
-                      Icons.play_circle,
+                      Icons.play_arrow,
                       size: 50,
                     )),
                 ElevatedButton(
