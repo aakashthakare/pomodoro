@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,17 @@ class PomodoroTimerState extends State<PomodoroTimer> {
   bool _isStarted = false;
   Timer? timer;
 
+  bool isSmallBreakValid = true;
+  bool isSessionValid = true;
+  bool isLongBreakValid = true;
+
+  TextEditingController sessionEditContoller =
+      TextEditingController(text: sessionManager.focus.toString());
+  TextEditingController smallBreakEditContoller =
+      TextEditingController(text: sessionManager.smallBreak.toString());
+  TextEditingController longBreakEditContoller =
+      TextEditingController(text: sessionManager.longBreak.toString());
+
   @override
   void initState() {
     updateDuration();
@@ -24,9 +36,99 @@ class PomodoroTimerState extends State<PomodoroTimer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: buildTimer(),
-    );
+        appBar: AppBar(automaticallyImplyLeading: true),
+        backgroundColor: Colors.white,
+        body: buildTimer(),
+        drawer: Drawer(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(0), bottomRight: Radius.circular(0)),
+          ),
+          child: ListView(
+            children: [
+              ListTile(
+                  title: const Text('Home'),
+                  onTap: () => Navigator.pop(context)),
+              ExpansionTile(
+                  title: const Text('Config'),
+                  childrenPadding: EdgeInsets.all(20),
+                  children: [
+                    Text("Update session and break minutes."),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: sessionEditContoller,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Focus',
+                        errorText: isSessionValid
+                            ? null
+                            : "Please enter valid focus minutes.",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: smallBreakEditContoller,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Break',
+                        errorText: isSmallBreakValid
+                            ? null
+                            : "Please enter valid break minutes.",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: longBreakEditContoller,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Long Break',
+                        errorText: isLongBreakValid
+                            ? null
+                            : "Please enter valid long break minutes.",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                        onPressed: validateAndUpdate, child: const Text("Save"))
+                  ])
+            ],
+          ),
+        ));
+  }
+
+  validateAndUpdate() {
+    setState(() {
+      int focus = int.tryParse(sessionEditContoller.text) ?? -1;
+      isSessionValid = (focus > 0);
+      log("$focus $isSessionValid");
+
+      int smallBreak = int.tryParse(smallBreakEditContoller.text) ?? -1;
+      isSmallBreakValid = (smallBreak > 0);
+      log("$smallBreak $isSmallBreakValid");
+
+      int longBreak = int.tryParse(longBreakEditContoller.text) ?? -1;
+      isLongBreakValid = (longBreak > 0);
+      log("$longBreak $isLongBreakValid");
+
+      if (isSessionValid && isSmallBreakValid && isLongBreakValid) {
+        log("Inside update");
+
+        sessionManager.clear();
+        pause();
+
+        sessionManager.focus = focus;
+        sessionManager.smallBreak = smallBreak;
+        sessionManager.longBreak = longBreak;
+
+        session = sessionManager.next();
+        updateDuration();
+        buildTimer();
+        Navigator.pop(context);
+      }
+    });
   }
 
   buildTimer() {

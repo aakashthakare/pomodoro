@@ -6,7 +6,7 @@ class PomodoroSessionManager {
   static const int start = 1;
   static const int end = 8;
 
-  var session = 25;
+  var focus = 25;
   var smallBreak = 5;
   var longBreak = 30;
 
@@ -24,7 +24,7 @@ class PomodoroSessionManager {
       color = Colors.blueGrey;
     } else {
       if (state % 2 != 0) {
-        timerMinutes = session;
+        timerMinutes = focus;
         title = "Focus";
         color = Colors.lightGreen;
       } else {
