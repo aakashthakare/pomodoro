@@ -1,7 +1,7 @@
 # Pomodoro
 An app in [Flutter](https://flutter.dev/) for running Pomodoro sessions for focused work and regular breaks for better productivity.
 
-## What is Pomodoro Technique?
+## What is it?
 This technique suggests to work in small time slots which are called pomodoro and after each pomodoro one small break should be taken. After three cycles one should take a long break.
 
 This ensures that your mind is utilised well and not overwhelmed by taking enough breaks.
