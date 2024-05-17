@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'widget/PomodoroTimer.dart';
+import 'timer.dart';
 
 void main() {
   runApp(MyApp());

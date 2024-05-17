@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-import '../domain/PomodoroSession.dart';
-import '../manager/PomodoroSessionManager.dart';
-import '../widget/PomodoroTimer.dart';
+import 'session.dart';
+import 'session_manager.dart';
+import 'timer.dart';
 
 class PomodoroTimerState extends State<PomodoroTimer> {
   static PomodoroSessionManager sessionManager = PomodoroSessionManager();

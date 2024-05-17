@@ -1,8 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-import '../domain/PomodoroSession.dart';
+import 'session.dart';
 
 class PomodoroSessionManager {
   static const int start = 1;
