@@ -92,7 +92,8 @@ class PomodoroTimerState extends State<PomodoroTimer> {
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
-                        onPressed: validateAndUpdate, child: const Text("Save"))
+                        onPressed: validateAndUpdate,
+                        child: const Text("Save & Reset"))
                   ])
             ],
           ),
