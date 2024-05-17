@@ -10,7 +10,7 @@ class PomodoroSessionManager {
   var smallBreak = 5;
   var longBreak = 30;
 
-  var state = 1;
+  var state = 8;
 
   next() {
     int timerMinutes;
